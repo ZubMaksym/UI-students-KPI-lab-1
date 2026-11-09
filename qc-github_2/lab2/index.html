@@ -1,0 +1,1352 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Лабораторна робота №2 — UI-елементи веб-сторінки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #fff6e5;
+        --panel: #ffffff;
+        --ink: #2b2233;
+        --muted: #75687a;
+        --line: #eadfcb;
+        --sans: "Poppins", "Montserrat", "Segoe UI", Roboto, Arial, sans-serif;
+        --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --paper: #15172a;
+          --panel: #1f2238;
+          --ink: #eef0ff;
+          --muted: #a5a8c8;
+          --line: #33375a;
+        }
+      }
+      :root[data-theme="dark"] {
+        --paper: #15172a;
+        --panel: #1f2238;
+        --ink: #eef0ff;
+        --muted: #a5a8c8;
+        --line: #33375a;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      html {
+        scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
+        scroll-behavior: smooth;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      a {
+        color: #3a86ff;
+        font-weight: 600;
+      }
+      :focus-visible {
+        outline: 3px solid var(--c, #3a86ff);
+        outline-offset: 2px;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      .page {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 40px 20px 56px;
+      }
+      .home-link {
+        display: inline-block;
+        font-size: 15px;
+        margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-size: clamp(32px, 5vw, 52px);
+        line-height: 1.05;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0 0 10px;
+      }
+      .hero h1 .dot {
+        display: inline-block;
+        width: 0.32em;
+        height: 0.32em;
+        border-radius: 50%;
+        margin-left: 0.08em;
+      }
+      .hero p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 17px;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 26px 0 30px;
+        padding: 0;
+        list-style: none;
+      }
+      .chips a {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: var(--panel);
+        border: 2px solid var(--c);
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 14.5px;
+        font-weight: 700;
+      }
+      .chips a:hover,
+      .chips a.active {
+        background: var(--c);
+        color: #fff;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .card {
+        background: var(--panel);
+        border-radius: 16px;
+        box-shadow: 0 6px 18px -10px
+          color-mix(in srgb, var(--c) 60%, transparent);
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .card.wide {
+        grid-column: 1 / -1;
+      }
+      .card-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 22px 4px;
+      }
+      .card-head .num {
+        flex: none;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--c);
+        color: #fff;
+        font-weight: 800;
+        display: grid;
+        place-items: center;
+        font-size: 16px;
+      }
+      .card h2 {
+        margin: 0;
+        font-size: 21px;
+        font-weight: 800;
+      }
+      .card h2 .ua {
+        font-weight: 600;
+        color: var(--muted);
+        font-size: 15px;
+        margin-left: 6px;
+      }
+      .purpose {
+        margin: 6px 22px 0;
+        color: var(--muted);
+      }
+      .demo {
+        padding: 16px 22px 18px;
+        flex: 1;
+      }
+      .state {
+        margin: 0 14px 14px;
+        padding: 9px 12px;
+        border-radius: 10px;
+        background: color-mix(in srgb, var(--c) 12%, var(--panel));
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--muted);
+        overflow-wrap: anywhere;
+      }
+      .state b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      fieldset {
+        border: 0;
+        margin: 0;
+        padding: 0;
+      }
+      legend,
+      .field-label {
+        font-weight: 700;
+        font-size: 15px;
+        margin-bottom: 6px;
+        padding: 0;
+        display: block;
+      }
+      .choice {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 0;
+        cursor: pointer;
+      }
+      .choice input {
+        width: 19px;
+        height: 19px;
+        accent-color: var(--c);
+        margin: 0;
+        cursor: pointer;
+      }
+      .choice.sub {
+        padding-left: 28px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      select,
+      textarea {
+        width: 100%;
+        font: inherit;
+        color: var(--ink);
+        background: var(--panel);
+        border: 2px solid var(--line);
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--c);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 20%, transparent);
+      }
+      input[aria-invalid="true"] {
+        border-color: #ff5d73;
+      }
+      .help {
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .error-msg {
+        font-size: 14px;
+        color: #e5384f;
+        margin-top: 4px;
+        min-height: 1.4em;
+        font-weight: 600;
+      }
+      .row {
+        margin-bottom: 10px;
+      }
+      .counter {
+        float: right;
+        font-family: var(--mono);
+        font-size: 12.5px;
+        color: var(--muted);
+        font-weight: 400;
+      }
+
+      .btn {
+        font: inherit;
+        font-weight: 700;
+        font-size: 15px;
+        border-radius: 999px;
+        padding: 9px 18px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-primary {
+        background: var(--c);
+        color: #fff;
+      }
+      .btn-primary:hover:not(:disabled) {
+        filter: brightness(1.08);
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--ink);
+        border-color: var(--line);
+      }
+      .btn-secondary:hover:not(:disabled) {
+        border-color: var(--c);
+      }
+      .btn-danger {
+        background: transparent;
+        color: #e5384f;
+        border-color: #ff5d73;
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .tablist {
+        display: flex;
+        gap: 6px;
+        background: color-mix(in srgb, var(--c) 12%, var(--panel));
+        padding: 4px;
+        border-radius: 999px;
+        width: fit-content;
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      .tab {
+        font: inherit;
+        font-weight: 700;
+        font-size: 15px;
+        background: none;
+        border: 0;
+        border-radius: 999px;
+        padding: 6px 16px;
+        color: var(--muted);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .tab[aria-selected="true"] {
+        background: var(--c);
+        color: #fff;
+      }
+      .tabpanel {
+        padding: 12px 4px 0;
+      }
+      .tabpanel p {
+        margin: 0;
+      }
+
+      .status {
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 14.5px;
+        margin-top: 10px;
+        font-weight: 600;
+      }
+      .status.ok {
+        background: #ddf7ea;
+        color: #146c43;
+      }
+      .status.warn {
+        background: #ffe9d6;
+        color: #a14b00;
+      }
+      @media (prefers-color-scheme: dark) {
+        .status.ok {
+          background: #18392b;
+          color: #8de4b5;
+        }
+        .status.warn {
+          background: #3d2a17;
+          color: #ffc38a;
+        }
+      }
+
+      .link-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .link-list li {
+        padding: 5px 0;
+      }
+
+      .tip-wrap {
+        position: relative;
+        display: inline-flex;
+      }
+      .tip-trigger {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 0;
+        background: var(--c);
+        color: #fff;
+        font: 800 15px var(--sans);
+        cursor: help;
+        display: inline-grid;
+        place-items: center;
+        padding: 0;
+      }
+      .tooltip {
+        position: absolute;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        max-width: 230px;
+        background: var(--ink);
+        color: var(--paper);
+        font-size: 14px;
+        line-height: 1.4;
+        padding: 8px 11px;
+        border-radius: 10px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.12s;
+        z-index: 5;
+        pointer-events: none;
+        font-weight: 600;
+      }
+      .tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: var(--ink);
+      }
+      .tip-wrap.open .tooltip {
+        opacity: 1;
+        visibility: visible;
+      }
+      .tip-line {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+      }
+
+      .grid-tools {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+      .grid-tools input {
+        flex: 1 1 180px;
+      }
+      .grid-tools select {
+        width: auto;
+        flex: 0 0 auto;
+      }
+      .table-scroll {
+        overflow-x: auto;
+        border-radius: 12px;
+        border: 2px solid var(--line);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 9px 14px;
+        white-space: nowrap;
+      }
+      th {
+        background: var(--c);
+        color: #fff;
+      }
+      th button {
+        font: inherit;
+        font-weight: 700;
+        background: none;
+        border: 0;
+        color: #fff;
+        cursor: pointer;
+        padding: 0;
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+      }
+      th button .arrow {
+        font-size: 11px;
+        width: 10px;
+      }
+      tbody tr:nth-child(even) {
+        background: color-mix(in srgb, var(--c) 7%, var(--panel));
+      }
+      tbody tr:hover {
+        background: color-mix(in srgb, var(--c) 16%, var(--panel));
+      }
+      td.num,
+      th.num {
+        text-align: right;
+      }
+      td.num {
+        font-family: var(--mono);
+      }
+      .pill {
+        display: inline-block;
+        padding: 1px 10px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .pill.done {
+        background: #ddf7ea;
+        color: #146c43;
+      }
+      .pill.review {
+        background: #fff1c9;
+        color: #8a6100;
+      }
+      .pill.miss {
+        background: #ffe1e6;
+        color: #b4233a;
+      }
+      .empty td {
+        text-align: center;
+        color: var(--muted);
+        padding: 22px;
+        white-space: normal;
+      }
+      .pager {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+        font-size: 14.5px;
+        color: var(--muted);
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .pager .btn {
+        padding: 6px 14px;
+        font-size: 14px;
+      }
+
+      footer {
+        margin-top: 32px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      @media (max-width: 780px) {
+        .cards {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <a class="home-link" href="../">На головну</a>
+        <h1>
+          UI-елементи веб-сторінки<span
+            class="dot"
+            style="background: #ff5d73"
+          ></span
+          ><span class="dot" style="background: #ffb703"></span
+          ><span class="dot" style="background: #3a86ff"></span>
+        </h1>
+        <p>Лабораторна робота №2. Зуб М.Є., ІП-44</p>
+      </header>
+
+      <ul class="chips" aria-label="Зміст">
+        <li><a href="#radio" style="--c: #ff5d73">Radiobutton</a></li>
+        <li><a href="#checkbox" style="--c: #ff8c1a">Checkbox</a></li>
+        <li><a href="#input" style="--c: #e0a100">Text input</a></li>
+        <li><a href="#tabs" style="--c: #2bb673">Tabs</a></li>
+        <li><a href="#button" style="--c: #00a8b5">Button</a></li>
+        <li><a href="#label" style="--c: #3a86ff">Text label</a></li>
+        <li><a href="#link" style="--c: #6a4cff">Link</a></li>
+        <li><a href="#tooltip" style="--c: #b44ce0">Tooltip</a></li>
+        <li><a href="#dropdown" style="--c: #ff4fa3">Dropdown list</a></li>
+        <li><a href="#grid" style="--c: #3a86ff">Data grid</a></li>
+      </ul>
+
+      <main class="cards">
+        <article class="card" id="radio" style="--c: #ff5d73">
+          <div class="card-head">
+            <span class="num">1</span>
+            <h2>Radiobutton<span class="ua">перемикач</span></h2>
+          </div>
+          <p class="purpose">
+            Вибір одного варіанта з кількох. Новий вибір скасовує попередній.
+          </p>
+          <div class="demo">
+            <fieldset>
+              <legend>Форма навчання</legend>
+              <label class="choice"
+                ><input type="radio" name="mode" value="Очна" checked />
+                Очна</label
+              >
+              <label class="choice"
+                ><input type="radio" name="mode" value="Дистанційна" />
+                Дистанційна</label
+              >
+              <label class="choice"
+                ><input type="radio" name="mode" value="Змішана" />
+                Змішана</label
+              >
+            </fieldset>
+          </div>
+          <div class="state" id="radio-state"></div>
+        </article>
+
+        <article class="card" id="checkbox" style="--c: #ff8c1a">
+          <div class="card-head">
+            <span class="num">2</span>
+            <h2>Checkbox<span class="ua">прапорець</span></h2>
+          </div>
+          <p class="purpose">
+            Вмикає опції незалежно одна від одної. Можна обрати будь-яку
+            кількість.
+          </p>
+          <div class="demo">
+            <fieldset>
+              <legend>Сповіщення</legend>
+              <label class="choice"
+                ><input type="checkbox" id="cb-all" /> Усі канали</label
+              >
+              <label class="choice sub"
+                ><input type="checkbox" class="cb-item" value="Email" checked />
+                Email</label
+              >
+              <label class="choice sub"
+                ><input type="checkbox" class="cb-item" value="Telegram" />
+                Telegram</label
+              >
+              <label class="choice sub"
+                ><input type="checkbox" class="cb-item" value="SMS" />
+                SMS</label
+              >
+            </fieldset>
+          </div>
+          <div class="state" id="cb-state"></div>
+        </article>
+
+        <article class="card" id="input" style="--c: #e0a100">
+          <div class="card-head">
+            <span class="num">3</span>
+            <h2>Text input<span class="ua">текстове поле</span></h2>
+          </div>
+          <p class="purpose">
+            Поле для введення тексту з клавіатури: імені, пошти, коментаря.
+          </p>
+          <div class="demo">
+            <div class="row">
+              <label class="field-label" for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="name@example.com"
+                autocomplete="email"
+                aria-describedby="email-err"
+              />
+              <div class="error-msg" id="email-err" aria-live="polite"></div>
+            </div>
+            <label class="field-label" for="comment"
+              >Коментар
+              <span class="counter" id="comment-count">0 / 120</span></label
+            >
+            <textarea
+              id="comment"
+              rows="2"
+              maxlength="120"
+              placeholder="Що варто покращити?"
+            ></textarea>
+          </div>
+          <div class="state" id="input-state"></div>
+        </article>
+
+        <article class="card" id="tabs" style="--c: #2bb673">
+          <div class="card-head">
+            <span class="num">4</span>
+            <h2>Tabs<span class="ua">вкладки</span></h2>
+          </div>
+          <p class="purpose">
+            Ділять вміст на частини, з яких видно одну. Перемикання без переходу
+            на іншу сторінку.
+          </p>
+          <div class="demo">
+            <div
+              class="tablist"
+              role="tablist"
+              aria-label="Інформація про курс"
+            >
+              <button
+                class="tab"
+                role="tab"
+                id="tab-1"
+                aria-controls="panel-1"
+                aria-selected="true"
+              >
+                Опис
+              </button>
+              <button
+                class="tab"
+                role="tab"
+                id="tab-2"
+                aria-controls="panel-2"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Розклад
+              </button>
+              <button
+                class="tab"
+                role="tab"
+                id="tab-3"
+                aria-controls="panel-3"
+                aria-selected="false"
+                tabindex="-1"
+              >
+                Оцінювання
+              </button>
+            </div>
+            <div
+              class="tabpanel"
+              role="tabpanel"
+              id="panel-1"
+              aria-labelledby="tab-1"
+            >
+              <p>Основи контролю якості програмного забезпечення.</p>
+            </div>
+            <div
+              class="tabpanel"
+              role="tabpanel"
+              id="panel-2"
+              aria-labelledby="tab-2"
+              hidden
+            >
+              <p>Лекції в понеділок, лабораторні в четвер.</p>
+            </div>
+            <div
+              class="tabpanel"
+              role="tabpanel"
+              id="panel-3"
+              aria-labelledby="tab-3"
+              hidden
+            >
+              <p>Лабораторні 60 балів, контрольна 20, залік 20.</p>
+            </div>
+          </div>
+          <div class="state" id="tabs-state"></div>
+        </article>
+
+        <article class="card" id="button" style="--c: #00a8b5">
+          <div class="card-head">
+            <span class="num">5</span>
+            <h2>Button<span class="ua">кнопка</span></h2>
+          </div>
+          <p class="purpose">Запускає дію: зберегти, скасувати, видалити.</p>
+          <div class="demo">
+            <label class="choice"
+              ><input type="checkbox" id="agree" /> Я перевірив дані</label
+            >
+            <div class="btn-row">
+              <button class="btn btn-primary" id="btn-save" disabled>
+                Зберегти
+              </button>
+              <button class="btn btn-secondary" id="btn-cancel">
+                Скасувати
+              </button>
+              <button class="btn btn-danger" id="btn-delete">Видалити</button>
+            </div>
+          </div>
+          <div class="state" id="btn-state"></div>
+        </article>
+
+        <article class="card" id="label" style="--c: #3a86ff">
+          <div class="card-head">
+            <span class="num">6</span>
+            <h2>Text label<span class="ua">мітка</span></h2>
+          </div>
+          <p class="purpose">
+            Незмінний текст, що підписує поле або повідомляє про стан.
+          </p>
+          <div class="demo">
+            <label class="field-label" for="group-name"
+              >Академічна група *</label
+            >
+            <input
+              type="text"
+              id="group-name"
+              placeholder="ІП-44"
+              aria-describedby="group-help"
+              required
+            />
+            <div class="help" id="group-help">Обов’язкове поле</div>
+            <div class="status ok" role="status">Дані збережено</div>
+          </div>
+          <div class="state" id="label-state">
+            Клікніть на мітку, і фокус перейде в поле
+          </div>
+        </article>
+
+        <article class="card" id="link" style="--c: #6a4cff">
+          <div class="card-head">
+            <span class="num">7</span>
+            <h2>Link<span class="ua">посилання</span></h2>
+          </div>
+          <p class="purpose">Переводить на іншу сторінку, розділ або сайт.</p>
+          <div class="demo">
+            <ul class="link-list">
+              <li><a href="#grid">До таблиці даних</a></li>
+              <li>
+                <a
+                  href="https://kpi.ua/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Сайт КПІ</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://developer.mozilla.org/uk/docs/Web/HTML/Element"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Довідник HTML на MDN</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="state" id="link-state"></div>
+        </article>
+
+        <article class="card" id="tooltip" style="--c: #b44ce0">
+          <div class="card-head">
+            <span class="num">8</span>
+            <h2>Tooltip<span class="ua">підказка</span></h2>
+          </div>
+          <p class="purpose">
+            Коротке пояснення, яке з’являється при наведенні або фокусі.
+          </p>
+          <div class="demo">
+            <div class="tip-line">
+              <span>Рейтинговий бал</span>
+              <span class="tip-wrap">
+                <button
+                  class="tip-trigger"
+                  aria-describedby="tip-1"
+                  type="button"
+                >
+                  ?
+                </button>
+                <span class="tooltip" role="tooltip" id="tip-1"
+                  >Сума балів за семестр, максимум 100</span
+                >
+              </span>
+              <span class="tip-wrap">
+                <button
+                  class="btn btn-secondary"
+                  aria-describedby="tip-2"
+                  type="button"
+                >
+                  Експорт
+                </button>
+                <span class="tooltip" role="tooltip" id="tip-2"
+                  >Завантажити таблицю у CSV</span
+                >
+              </span>
+            </div>
+          </div>
+          <div class="state" id="tip-state"></div>
+        </article>
+
+        <article class="card" id="dropdown" style="--c: #ff4fa3">
+          <div class="card-head">
+            <span class="num">9</span>
+            <h2>Dropdown list<span class="ua">випадний список</span></h2>
+          </div>
+          <p class="purpose">
+            Вибір одного значення зі списку, який розгортається за потреби.
+          </p>
+          <div class="demo">
+            <div class="row">
+              <label class="field-label" for="faculty">Факультет</label>
+              <select id="faculty">
+                <option value="">Оберіть факультет</option>
+                <option value="fiot">ФІОТ</option>
+                <option value="fpm">ФПМ</option>
+                <option value="fel">ФЕЛ</option>
+              </select>
+            </div>
+            <label class="field-label" for="major">Спеціальність</label>
+            <select id="major" disabled>
+              <option value="">Спершу оберіть факультет</option>
+            </select>
+          </div>
+          <div class="state" id="dd-state"></div>
+        </article>
+
+        <article class="card wide" id="grid" style="--c: #3a86ff">
+          <div class="card-head">
+            <span class="num">10</span>
+            <h2>Data grid<span class="ua">таблиця даних</span></h2>
+          </div>
+          <p class="purpose">
+            Таблиця записів із сортуванням, пошуком і сторінками. Клікніть на
+            заголовок, щоб відсортувати.
+          </p>
+          <div class="demo">
+            <div class="grid-tools">
+              <label for="grid-search" class="sr-only">Пошук</label>
+              <input type="text" id="grid-search" placeholder="Пошук" />
+              <label for="grid-status" class="sr-only">Статус</label>
+              <select id="grid-status">
+                <option value="">Усі статуси</option>
+                <option>Здано</option>
+                <option>На перевірці</option>
+                <option>Не здано</option>
+              </select>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <button data-key="subject">
+                        Дисципліна <span class="arrow"></span>
+                      </button>
+                    </th>
+                    <th scope="col">
+                      <button data-key="work">
+                        Робота <span class="arrow"></span>
+                      </button>
+                    </th>
+                    <th scope="col">
+                      <button data-key="deadline">
+                        Дедлайн <span class="arrow"></span>
+                      </button>
+                    </th>
+                    <th scope="col">
+                      <button data-key="status">
+                        Статус <span class="arrow"></span>
+                      </button>
+                    </th>
+                    <th scope="col" class="num">
+                      <button data-key="score">
+                        Бал <span class="arrow"></span>
+                      </button>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="grid-body"></tbody>
+              </table>
+            </div>
+            <div class="pager">
+              <span id="grid-info"></span>
+              <span>
+                <button class="btn btn-secondary" id="prev">Назад</button>
+                <button class="btn btn-secondary" id="next">Далі</button>
+              </span>
+            </div>
+          </div>
+          <div class="state" id="grid-state"></div>
+        </article>
+      </main>
+
+      <footer>Київ, 2026</footer>
+    </div>
+
+    <script>
+      const $ = (s, r = document) => r.querySelector(s);
+      const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+      const setState = (id, html) => {
+        $(id).innerHTML = html;
+      };
+
+      function radioState() {
+        const mode = $('input[name="mode"]:checked').value;
+        setState("#radio-state", `Обрано: <b>${mode}</b>`);
+      }
+      $$('input[type="radio"]').forEach((r) =>
+        r.addEventListener("change", radioState),
+      );
+      radioState();
+
+      const cbAll = $("#cb-all"),
+        cbItems = $$(".cb-item");
+      function cbState() {
+        const on = cbItems.filter((c) => c.checked);
+        cbAll.checked = on.length === cbItems.length;
+        cbAll.indeterminate = on.length > 0 && on.length < cbItems.length;
+        const parent = cbAll.indeterminate
+          ? "проміжний"
+          : cbAll.checked
+            ? "позначено"
+            : "не позначено";
+        setState(
+          "#cb-state",
+          `Обрано: <b>${on.map((c) => c.value).join(", ") || "нічого"}</b>; «Усі»: <b>${parent}</b>`,
+        );
+      }
+      cbAll.addEventListener("change", () => {
+        cbItems.forEach((c) => (c.checked = cbAll.checked));
+        cbState();
+      });
+      cbItems.forEach((c) => c.addEventListener("change", cbState));
+      cbState();
+
+      const email = $("#email"),
+        comment = $("#comment");
+      const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+      function inputState() {
+        const v = email.value.trim();
+        const st =
+          v === ""
+            ? "порожнє"
+            : emailOk(v)
+              ? "коректний формат"
+              : "некоректний формат";
+        $("#comment-count").textContent = `${comment.value.length} / 120`;
+        setState("#input-state", `Email: <b>${v || "—"}</b> (${st})`);
+      }
+      email.addEventListener("blur", () => {
+        const v = email.value.trim();
+        const bad = v !== "" && !emailOk(v);
+        email.setAttribute("aria-invalid", bad);
+        $("#email-err").textContent = bad
+          ? "Введіть адресу у форматі name@example.com."
+          : "";
+      });
+      email.addEventListener("input", () => {
+        if (
+          email.getAttribute("aria-invalid") === "true" &&
+          emailOk(email.value.trim())
+        ) {
+          email.setAttribute("aria-invalid", "false");
+          $("#email-err").textContent = "";
+        }
+        inputState();
+      });
+      comment.addEventListener("input", inputState);
+      inputState();
+
+      const tabs = $$(".tab");
+      function selectTab(tab, focus = true) {
+        tabs.forEach((t) => {
+          const on = t === tab;
+          t.setAttribute("aria-selected", on);
+          t.tabIndex = on ? 0 : -1;
+          $("#" + t.getAttribute("aria-controls")).hidden = !on;
+        });
+        if (focus) tab.focus();
+        setState("#tabs-state", `Активна вкладка: <b>${tab.textContent}</b>`);
+      }
+      tabs.forEach((t, i) => {
+        t.addEventListener("click", () => selectTab(t));
+        t.addEventListener("keydown", (e) => {
+          const map = {
+            ArrowRight: (i + 1) % tabs.length,
+            ArrowLeft: (i - 1 + tabs.length) % tabs.length,
+            Home: 0,
+            End: tabs.length - 1,
+          };
+          if (e.key in map) {
+            e.preventDefault();
+            selectTab(tabs[map[e.key]]);
+          }
+        });
+      });
+      selectTab(tabs[0], false);
+
+      const agree = $("#agree"),
+        save = $("#btn-save");
+      let saves = 0,
+        lastAction = "ще не натискали";
+      function btnState() {
+        setState(
+          "#btn-state",
+          `«Зберегти»: <b>${save.disabled ? "неактивна" : "активна"}</b>; дія: <b>${lastAction}</b>`,
+        );
+      }
+      agree.addEventListener("change", () => {
+        save.disabled = !agree.checked;
+        btnState();
+      });
+      save.addEventListener("click", () => {
+        if (save.dataset.busy) return;
+        save.dataset.busy = "1";
+        save.disabled = true;
+        save.innerHTML =
+          '<span class="spinner" aria-hidden="true"></span>Зберігаю';
+        lastAction = "збереження...";
+        btnState();
+        setTimeout(() => {
+          saves++;
+          delete save.dataset.busy;
+          save.textContent = "Зберегти";
+          save.disabled = !agree.checked;
+          lastAction = `збережено (${saves})`;
+          btnState();
+        }, 1000);
+      });
+      $("#btn-cancel").addEventListener("click", () => {
+        agree.checked = false;
+        save.disabled = true;
+        lastAction = "скасовано";
+        btnState();
+      });
+      $("#btn-delete").addEventListener("click", () => {
+        lastAction = confirm("Видалити чернетку?")
+          ? "видалено"
+          : "видалення скасовано";
+        btnState();
+      });
+      btnState();
+
+      const groupInput = $("#group-name");
+      groupInput.addEventListener("focus", () =>
+        setState("#label-state", "Фокус у полі <b>«Академічна група»</b>"),
+      );
+      groupInput.addEventListener("input", () =>
+        setState(
+          "#label-state",
+          `Значення поля: <b>${groupInput.value || "—"}</b>`,
+        ),
+      );
+
+      setState("#link-state", "Наведіть на посилання");
+      $$(".link-list a").forEach((a) => {
+        const show = () =>
+          setState(
+            "#link-state",
+            `Адреса: <b>${a.getAttribute("href")}</b>${a.target === "_blank" ? " (нова вкладка)" : ""}`,
+          );
+        a.addEventListener("mouseenter", show);
+        a.addEventListener("focus", show);
+      });
+
+      $$(".tip-wrap").forEach((w) => {
+        const trigger = w.querySelector("button");
+        const name = trigger.textContent === "?" ? "«?»" : "«Експорт»";
+        const open = () => {
+          w.classList.add("open");
+          setState("#tip-state", `Підказка ${name}: <b>показано</b>`);
+        };
+        const close = () => {
+          w.classList.remove("open");
+          setState("#tip-state", `Підказка ${name}: <b>приховано</b>`);
+        };
+        w.addEventListener("mouseenter", open);
+        w.addEventListener("mouseleave", close);
+        trigger.addEventListener("focus", open);
+        trigger.addEventListener("blur", close);
+        trigger.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") close();
+        });
+        trigger.addEventListener("click", () =>
+          w.classList.contains("open") ? close() : open(),
+        );
+      });
+      setState("#tip-state", "Наведіть на «?» або кнопку");
+
+      const majors = {
+        fiot: [
+          "121 Інженерія програмного забезпечення",
+          "123 Комп’ютерна інженерія",
+          "126 Інформаційні системи та технології",
+        ],
+        fpm: [
+          "113 Прикладна математика",
+          "121 Інженерія програмного забезпечення",
+        ],
+        fel: ["171 Електроніка", "172 Електронні комунікації та радіотехніка"],
+      };
+      const faculty = $("#faculty"),
+        major = $("#major");
+      function ddState() {
+        const f = faculty.value ? faculty.selectedOptions[0].text : "—";
+        const m = major.value || "—";
+        setState(
+          "#dd-state",
+          `Факультет: <b>${f}</b>; спеціальність: <b>${m}</b>`,
+        );
+      }
+      faculty.addEventListener("change", () => {
+        const list = majors[faculty.value];
+        major.innerHTML = list
+          ? '<option value="">Оберіть спеціальність</option>' +
+            list.map((x) => `<option>${x}</option>`).join("")
+          : '<option value="">Спершу оберіть факультет</option>';
+        major.disabled = !list;
+        ddState();
+      });
+      major.addEventListener("change", ddState);
+      ddState();
+
+      const rows = [
+        ["Контроль якості ПЗ", "ЛР1", "2026-09-22", "Здано", 9],
+        ["Контроль якості ПЗ", "ЛР2", "2026-10-14", "На перевірці", null],
+        ["Комп’ютерна графіка", "ЛР1", "2026-10-09", "Здано", 10],
+        ["Комп’ютерна графіка", "ЛР2", "2026-10-23", "Не здано", null],
+        ["Інтелектуальні системи", "ЛР1", "2026-09-26", "Здано", 8],
+        ["Інтелектуальні системи", "ЛР2", "2026-10-10", "Здано", 9],
+        ["Інтелектуальні системи", "ЛР3", "2026-10-24", "На перевірці", null],
+        ["Системне програмування", "ЛР1", "2026-10-02", "Здано", 7],
+        ["Системне програмування", "ЛР2", "2026-10-16", "Не здано", null],
+        ["Бази даних", "ЛР1", "2026-09-19", "Здано", 10],
+        ["Бази даних", "ЛР2", "2026-10-03", "Здано", 6],
+        ["Бази даних", "ЛР3", "2026-10-17", "Не здано", null],
+      ].map(([subject, work, deadline, status, score]) => ({
+        subject,
+        work,
+        deadline,
+        status,
+        score,
+      }));
+      const PAGE = 5;
+      const pillCls = {
+        Здано: "done",
+        "На перевірці": "review",
+        "Не здано": "miss",
+      };
+      let sortKey = "deadline",
+        sortDir = 1,
+        page = 0;
+      const fmtDate = (d) => d.split("-").reverse().join(".");
+      function renderGrid() {
+        const q = $("#grid-search").value.trim().toLowerCase();
+        const st = $("#grid-status").value;
+        let data = rows.filter(
+          (r) =>
+            (!st || r.status === st) &&
+            (!q ||
+              `${r.subject} ${r.work} ${r.status}`.toLowerCase().includes(q)),
+        );
+        data.sort((a, b) => {
+          const x = a[sortKey],
+            y = b[sortKey];
+          if (x === null) return 1;
+          if (y === null) return -1;
+          return (
+            (typeof x === "number"
+              ? x - y
+              : String(x).localeCompare(String(y), "uk")) * sortDir
+          );
+        });
+        const pages = Math.max(1, Math.ceil(data.length / PAGE));
+        page = Math.min(page, pages - 1);
+        const slice = data.slice(page * PAGE, page * PAGE + PAGE);
+        $("#grid-body").innerHTML = slice.length
+          ? slice
+              .map(
+                (r) =>
+                  `<tr><td>${r.subject}</td><td>${r.work}</td><td>${fmtDate(r.deadline)}</td><td><span class="pill ${pillCls[r.status]}">${r.status}</span></td><td class="num">${r.score ?? "—"}</td></tr>`,
+              )
+              .join("")
+          : '<tr class="empty"><td colspan="5">Нічого не знайдено. Змініть пошук або статус.</td></tr>';
+        $("#grid-info").textContent = `Сторінка ${page + 1} з ${pages}`;
+        $("#prev").disabled = page === 0;
+        $("#next").disabled = page >= pages - 1;
+        $$("th button").forEach((b) => {
+          const on = b.dataset.key === sortKey;
+          b.querySelector(".arrow").textContent = on
+            ? sortDir > 0
+              ? "▲"
+              : "▼"
+            : "";
+          b.closest("th").setAttribute(
+            "aria-sort",
+            on ? (sortDir > 0 ? "ascending" : "descending") : "none",
+          );
+        });
+        const colName = $(
+          `th button[data-key="${sortKey}"]`,
+        ).firstChild.textContent.trim();
+        setState(
+          "#grid-state",
+          `Сортування: <b>${colName} ${sortDir > 0 ? "↑" : "↓"}</b>; знайдено: <b>${data.length}</b>`,
+        );
+      }
+      $$("th button").forEach((b) =>
+        b.addEventListener("click", () => {
+          sortDir = b.dataset.key === sortKey ? -sortDir : 1;
+          sortKey = b.dataset.key;
+          renderGrid();
+        }),
+      );
+      $("#grid-search").addEventListener("input", () => {
+        page = 0;
+        renderGrid();
+      });
+      $("#grid-status").addEventListener("change", () => {
+        page = 0;
+        renderGrid();
+      });
+      $("#prev").addEventListener("click", () => {
+        page--;
+        renderGrid();
+      });
+      $("#next").addEventListener("click", () => {
+        page++;
+        renderGrid();
+      });
+      renderGrid();
+
+      const tocLinks = $$(".chips a");
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting)
+              tocLinks.forEach((a) =>
+                a.classList.toggle(
+                  "active",
+                  a.getAttribute("href") === "#" + e.target.id,
+                ),
+              );
+          });
+        },
+        { rootMargin: "-30% 0px -60% 0px" },
+      );
+      $$("main article").forEach((s) => io.observe(s));
+    </script>
+  </body>
+</html>
